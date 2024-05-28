@@ -7,7 +7,7 @@ Synapse Trie is a Python package for efficiently storing and searching phrases u
 Install directly using pip:
 
 ```bash
-pip install git+https://github.com/yourusername/synapse_trie.git
+pip install git+https://github.com/J0nasW/SynapseTrie.git
 ```
 
 ## Usage
