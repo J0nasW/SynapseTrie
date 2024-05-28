@@ -13,7 +13,7 @@ pip install git+https://github.com/J0nasW/SynapseTrie.git
 ## Usage
 
 ```python
-from synapse_trie import SynapseTrie
+from SynapseTrie import SynapseTrie
 
 trie = SynapseTrie()
 
