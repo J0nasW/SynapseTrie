@@ -1,5 +1,5 @@
 import unittest
-from synapse_trie import WordTrie
+from synapsetrie import WordTrie
 
 class TestWordTrie(unittest.TestCase):
     def test_addition(self):

@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='synapse_trie',
+    name='SynapseTrie',
     version='0.1',
     packages=find_packages(),
     description='Efficient trie for storing and searching phrases.',
