@@ -14,7 +14,8 @@ setup(
         'pandas>=1.1.5',
         'nltk>=3.5',
         'scipy>=1.5.4',
-        'tqdm>=4.56.0'
+        'tqdm>=4.56.0',
+        'yaml>=0.2.5',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
