@@ -9,7 +9,6 @@ except (KeyError, AttributeError, TypeError) as e:
     pass
 
 import json
-from collections import deque
 from tqdm import tqdm
 from scipy.sparse import lil_matrix
 from collections import defaultdict

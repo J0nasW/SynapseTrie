@@ -1,6 +1,5 @@
 import unittest
 from scipy.sparse import csr_matrix
-from collections import deque
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..')) # Only for local testing
 from SynapseTrie import WordTrie
