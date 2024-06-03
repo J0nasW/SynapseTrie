@@ -9,6 +9,7 @@ except (KeyError, AttributeError, TypeError) as e:
     pass
 
 import json
+from collections import deque
 from tqdm import tqdm
 from scipy.sparse import lil_matrix
 from collections import defaultdict
@@ -330,11 +331,13 @@ class WordTrie:
         for doc_id, doc in tqdm(enumerate(documents), total=len(documents), desc="Building Matrix"):
             # Convert document to a filtered string if necessary
             doc_text = doc if not self.text_filter else filter_string(doc)
-            for word in split_if_string(doc_text):
-                # Ensure valid key and check if it exists in the trie
-                word = ensure_valid_key(word)
-                if word in phrase_to_id:
-                    matrix[doc_id, phrase_to_id[word]] += 1
+
+            # Check for each phrase in the document
+            for phrase in phrase_to_id.keys():
+                # Count the occurrences of the phrase in the document
+                phrase_count = doc_text.count(phrase)
+                if phrase_count > 0:
+                    matrix[doc_id, phrase_to_id[phrase]] += phrase_count
 
         return matrix.tocsr()  # Convert to CSR for efficient arithmetic and matrix vector operations
     
@@ -342,10 +345,16 @@ class WordTrie:
         """Retrieve sorted list of phrases stored in the trie."""
         def collect_phrases(node, prefix=''):
             if _RESERVED_KEY in node:
-                yield prefix
-            for char, next_node in node.items():
-                if char != _RESERVED_KEY:
-                    yield from collect_phrases(next_node, prefix + char)
+                phrases.append(prefix)
+            for phrase, next_node in node.items():
+                if phrase != _RESERVED_KEY:
+                    space = ' ' if _RESERVED_KEY not in next_node else ''
+                    collect_phrases(next_node, prefix + phrase + space)
+
+        # Collect all phrases into a list
+        phrases = []
+        collect_phrases(self.root)
+        return phrases
     
     # Counting and length of the trie
     

@@ -1,6 +1,8 @@
 import unittest
-# import sys, os
-# sys.path.append(os.path.join(os.path.dirname(__file__), '..')) # Only for local testing
+from scipy.sparse import csr_matrix
+from collections import deque
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..')) # Only for local testing
 from SynapseTrie import WordTrie
 
 class TestWordTrie(unittest.TestCase):
@@ -160,6 +162,32 @@ class TestWordTrie(unittest.TestCase):
         texts = ["hello", "world", "unknown"]
         results = self.trie.search(texts)
         self.assertEqual(len(results), 2)  # Expecting three results: for 'hello', 'world', and not for 'unknown'
+        
+    def test_get_feature_names(self):
+        """Test the get_feature_names function."""
+        self.trie.add("hello", weight=1.0, payload={"info": "greeting"})
+        self.trie.add("world", weight=2.0, payload={"info": "planet"})
+        self.trie.add("goodbye", weight=3.0, payload={"info": "farewell"})
+        expected = ['hello', 'world', 'goodbye']
+        self.assertEqual(self.trie.get_feature_names(), expected)
+        
+    def test_build_phrase_document_matrix(self):
+        """Test the build_phrase_document_matrix function."""
+        self.trie.add("test phrase", weight=1.0, payload={"info": "greeting"})
+        self.trie.add("ultimative test", weight=2.0, payload={"info": "farewell"})
+        self.trie.add("awesome", weight=3.0, payload={"info": "planet"})
+        documents = ['here we have a test phrase', 'that is awesome', 'this ultimative test yields a test phrase', '']
+        matrix = self.trie.build_phrase_document_matrix(documents)
+        print(f"Matrix:\n{matrix.toarray()}")
+        expected = csr_matrix([[1, 0, 0], [0, 0, 1], [1, 1, 0], [0, 0, 0]])
+        self.assertTrue((matrix != expected).nnz == 0)
+        
+    def test_length(self):
+        """Test the length function."""
+        self.trie.add("test phrase", weight=1.0, payload={"info": "greeting"})
+        self.trie.add("ultimative test", weight=2.0, payload={"info": "farewell"})
+        self.trie.add("awesome", weight=3.0, payload={"info": "planet"})
+        self.assertEqual(self.trie.length(), 3)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
