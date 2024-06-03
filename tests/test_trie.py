@@ -1,6 +1,6 @@
 import unittest
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..')) # Only for local testing
+# import sys, os
+# sys.path.append(os.path.join(os.path.dirname(__file__), '..')) # Only for local testing
 from SynapseTrie import WordTrie
 
 class TestWordTrie(unittest.TestCase):

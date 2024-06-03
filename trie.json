@@ -1,0 +1,32 @@
+{
+  "hello": {
+    "#": {
+      "id": 0,
+      "phrase": "hello",
+      "weight": 1.0,
+      "payload": {
+        "info": "greeting"
+      }
+    },
+    "world": {
+      "#": {
+        "id": 2,
+        "phrase": "hello world",
+        "weight": 2.0,
+        "payload": {
+          "info": "planet"
+        }
+      }
+    }
+  },
+  "world": {
+    "#": {
+      "id": 1,
+      "phrase": "world",
+      "weight": 2.0,
+      "payload": {
+        "info": "planet"
+      }
+    }
+  }
+}

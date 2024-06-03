@@ -261,13 +261,6 @@ class WordTrie:
                 words_matched += 1
 
             return matches, words_matched
-            
-            # Final check to capture any phrase ending at the end of the text
-            if _RESERVED_KEY in node:
-                matches.append(node[_RESERVED_KEY])
-                words_matched += 1
-
-            return matches, words_matched
 
         def format_results(matches, words_matched):
             """Format the output based on the return_type and optionally add metadata."""
@@ -289,6 +282,7 @@ class WordTrie:
                     'mean_weight': sum(item.get('weight', 0) for item in matches) / len(matches) if matches else 0
                 }
                 return result_list, meta
+
             return result_list
 
         if isinstance(texts, str):
@@ -305,8 +299,17 @@ class WordTrie:
                     all_metadata.update({text: meta})
         else:
             raise ValueError("Input must be a string or a list of strings.")
+        
+        if return_meta:
+            # print("Returning results with metadata.")
+            # print(f"Matched phrases: {all_results}")
+            # print(f"Metadata: {all_metadata}")
+            return all_results, all_metadata
+        else:
+            # print(f"Matched phrases: {all_results}")
+            return all_results
 
-        return all_results, all_metadata if return_meta else all_results
+        # return all_results, all_metadata if return_meta else all_results
 
     # =====================================
     # Matrix Operations and Semantic Networks for the Trie

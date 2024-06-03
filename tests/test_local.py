@@ -6,6 +6,7 @@ trie = WordTrie(word_filter=True, text_filter=True)
 
 trie.add("hello", weight=1.0, payload={"info": "greeting"})
 trie.add("world", weight=2.0, payload={"info": "planet"})
+trie.add("hello world", weight=2.0, payload={"info": "planet"})
 
 # Retrieve the ID assigned to 'hello'
 print(f"ID assigned to 'hello': {trie.get_info('hello')}")
@@ -24,3 +25,6 @@ print(f"Found ids: {trie.search(text, return_type="id")}")
 print(f"Found payloads: {trie.search(text, return_type="payload")}")
 
 print(f"Searching for a nonexistent word: {trie.search('nonexistent')}")
+
+# Save the trie
+trie.to_json("trie.json")
