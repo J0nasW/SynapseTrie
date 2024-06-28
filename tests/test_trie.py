@@ -77,6 +77,20 @@ class TestWordTrie(unittest.TestCase):
         self.assertIn('#', node)
         self.assertEqual(node['#']['payload'], {"info": "planet"})
         self.assertEqual(node['#']['weight'], 2.0)
+        
+    def test_add_multiple_words_no_weights_or_payloads(self):
+        """Test adding multiple words without weights or payloads."""
+        self.trie.add_bulk(["hello", "world"])
+        # Retrieve the ID assigned to 'hello'
+        added_word_id = None
+        for id, path in self.trie.id_to_node_path.items():
+            reconstructed_word = ''.join(path)
+            if reconstructed_word == "hello":
+                added_word_id = id
+                break
+            
+        self.assertIsNotNone(added_word_id, "Word 'hello' was not added correctly.")
+        
 
     # Remove method tests
     def test_remove_by_string(self):

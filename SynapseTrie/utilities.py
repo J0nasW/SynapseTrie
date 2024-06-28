@@ -1,5 +1,11 @@
 import re
+import nltk
 from nltk.stem import WordNetLemmatizer
+
+try:
+    nltk.data.find('corpora/wordnet')
+except LookupError:
+    nltk.download('wordnet')
 
 _lemmatizer = WordNetLemmatizer()
 

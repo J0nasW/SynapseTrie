@@ -9,6 +9,7 @@ except (KeyError, AttributeError, TypeError) as e:
     pass
 
 import json
+import nltk
 from tqdm import tqdm
 from scipy.sparse import lil_matrix
 from collections import defaultdict
@@ -23,6 +24,7 @@ class WordTrie:
         self.text_filter = text_filter
         self.next_id = 0  # Initialize the ID counter
         self.id_to_node_path = {}  # Maps IDs to node paths
+        
 
     def _traverse_and_collect_phrases(self, node, path, phrase_dict, next_id):
         if _RESERVED_KEY in node:
@@ -66,10 +68,10 @@ class WordTrie:
     # =====================================
     
     def add(self, word, weight=None, payload=None):
+        """Add a word or phrase to the trie."""
         # Check if the word is a string or list, and split if necessary
         if word is not None and not isinstance(word, (str, list)):
             raise ValueError("Word must be a string or a list of strings.")
-        """Add a word or phrase to the trie."""
         # Check if weight is int or float, otherwise raise an error
         if weight is not None and not isinstance(weight, (int, float)):
             raise ValueError("Weight must be an integer or float.")
@@ -92,17 +94,20 @@ class WordTrie:
         
     def add_bulk(self, words_list, weight_list=None, payload_list=None):
         """Add multiple words or phrases to the trie, each with optional weights and payloads."""
-        if (weight_list is isinstance(weight_list, list)) or len(words_list) != len(weight_list):
-            if weight_list is isinstance(weight_list, list):
+        # Check if weight_list is provided and is a list, and if its length matches words_list
+        if weight_list is not None:
+            if not isinstance(weight_list, list):
                 raise ValueError(f"Weight list must be of instance list, not {type(weight_list)}.")
             if len(words_list) != len(weight_list):
                 raise ValueError(f"Weight list must be a list of the same length as the words list (Length of words: {len(words_list)}, Length of weights: {len(weight_list)}).")
-        if (payload_list is isinstance(payload_list, list)) or len(words_list) != len(payload_list):
-            if payload_list is isinstance(payload_list, list):
+        # Check if payload_list is provided and is a list, and if its length matches words_list
+        if payload_list is not None:
+            if not isinstance(payload_list, list):
                 raise ValueError(f"Payload list must be of instance list, not {type(payload_list)}.")
             if len(words_list) != len(payload_list):
                 raise ValueError(f"Payload list must be a list of the same length as the words list (Length of words: {len(words_list)}, Length of payloads: {len(payload_list)}).")
         for i, word in enumerate(words_list):
+            # Use None for weight and payload if their respective lists are not provided or are empty
             self.add(word, weight_list[i] if weight_list else None, payload_list[i] if payload_list else None)
     
     # =====================================
@@ -344,16 +349,18 @@ class WordTrie:
         """Retrieve sorted list of phrases stored in the trie."""
         def collect_phrases(node, prefix=''):
             if _RESERVED_KEY in node:
-                phrases.append(prefix)
+                # Directly append the phrase without adding an extra space at the end
+                phrases.append(prefix.rstrip())
             for phrase, next_node in node.items():
                 if phrase != _RESERVED_KEY:
-                    space = ' ' if _RESERVED_KEY not in next_node else ''
-                    collect_phrases(next_node, prefix + phrase + space)
+                    # Always add a space after a phrase part, will trim trailing spaces later
+                    collect_phrases(next_node, prefix + phrase + ' ')
 
         # Collect all phrases into a list
         phrases = []
         collect_phrases(self.root)
-        return phrases
+        # Return phrases, ensuring no trailing spaces
+        return [phrase.rstrip() for phrase in phrases]
     
     # Counting and length of the trie
     

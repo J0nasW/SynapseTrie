@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='SynapseTrie',
-    version='0.2',
+    version='0.3',
     packages=find_packages(),
     description='Efficient trie for storing and searching phrases.',
     long_description=open('README.md').read(),
